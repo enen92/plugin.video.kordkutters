@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+   <category label="30008">
+      <setting id="navigate_toall" type="bool" label="30009" default="false"/>
+      <setting id="items_per_page" label="30011" type="slider" default="30" range="5,50" option="int" />
+   </category>
+</settings>
