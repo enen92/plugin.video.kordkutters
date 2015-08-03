@@ -18,23 +18,13 @@
  
 """
 
-import urllib,urllib2,re,xbmcplugin,xbmcgui,xbmc,xbmcaddon,xbmcvfs
+import urllib,xbmcplugin
 import os,sys
 from resources.lib.common_variables import *
 from resources.lib.directory import *
-from resources.lib.getvideolist import *
+from resources.lib.youtubewrapper import *
 from resources.lib.watched import * 
-from resources.lib.kkplayer import *
 
-
-def main_menu():
-	if selfAddon.getSetting('navigate_toall') == 'true':
-		return_youtubevideos(1,"","all")
-	else:
-		addDir('[B]'+translate(30001)+'[/B]','',1, '',1,1)
-		addDir('[B]'+translate(30002)+'[/B]','',2, '',1,1)
-		addDir('[B]'+translate(30003)+'[/B]','',3, '',1,1)	
-	
 """
 
 Addon navigation is below
@@ -67,6 +57,7 @@ name=None
 mode=None
 iconimage=None
 page = None
+token = None
 
 try: url=urllib.unquote_plus(params["url"])
 except: pass
@@ -79,6 +70,8 @@ except:
 	except: pass
 try: iconimage=urllib.unquote_plus(params["iconimage"])
 except: pass
+try: token=urllib.unquote_plus(params["token"])
+except: pass
 try: page=int(params["page"])
 except: page = 1
 
@@ -87,25 +80,18 @@ print ("URL: "+str(url))
 print ("Name: "+str(name))
 print ("iconimage: "+str(iconimage))
 print ("Page: "+str(page))
+print ("Token: "+str(token))
 
-
-if mode==None: main_menu()
-elif mode==1: return_youtubevideos(page,url,"all")
-elif mode==2: return_youtubevideos(page,url,"episodes")
-elif mode==3: return_youtubevideos(page,url,"howto")
+if mode==None:
+	addDir('[B][I]'+translate(30001)+'[/B][/I]','',10,os.path.join(artfolder,'live.png'),1,1,'')
+	get_playlists()
+elif mode==1: return_youtubevideos(name,url,token,page)
 elif mode==5: 
-	video_url = 'plugin://plugin.video.youtube?path=/root/video&action=play_video&videoid='+url
-	item = xbmcgui.ListItem(path=video_url)
-	xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, item)
-	player = KKPlayer(mainurl=url)
-	player.play(video_url,item)
-	while player._playbackLock:
-		player._trackPosition()
-		xbmc.sleep(1000)
+	play_youtube_video(url)
 elif mode==6: mark_as_watched(url)
 elif mode==7: removed_watched(url)
 elif mode==8: add_to_bookmarks(url)
 elif mode==9: remove_from_bookmarks(url)
-	
+elif mode==10: get_live_videos()
 	
 xbmcplugin.endOfDirectory(int(sys.argv[1]))

@@ -19,15 +19,11 @@ msgid "KordKutters"
 ""
 
 msgctxt "#30001"
-msgid "All"
+msgid "Live"
 ""
 
 msgctxt "#30002"
-msgid "Episodes"
-""
-
-msgctxt "#30003"
-msgid "How-To"
+msgid "No live videos available right now."
 ""
 
 msgctxt "#30005"
@@ -44,10 +40,6 @@ msgid "Remove watched"
 
 msgctxt "#30008"
 msgid "General"
-""
-
-msgctxt "#30009"
-msgid "Show only all videos"
 ""
 
 msgctxt "#30010"

@@ -37,8 +37,10 @@ class KKPlayer(xbmc.Player):
 	def onPlayBackStopped(self):
 		print("player stopped")
 		self._playbackLock = False
-		if self.timepos/self.totalTime > 0.92:
-			mark_as_watched(self.urlwatched)
+		try:
+			if self.timepos/self.totalTime > 0.92:
+				mark_as_watched(self.urlwatched)
+		except:pass
 		else: pass
 
 

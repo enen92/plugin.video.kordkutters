@@ -20,6 +20,7 @@
 import xbmc,xbmcplugin,xbmcaddon,xbmcgui,sys,os,urllib,xbmcvfs
 from common_variables import *
 from iofile import *
+from kkplayer import *
 
 #Function to add an episode
 def addEpisode(name,url,mode,iconimage,page,number_of_items,info,folder=True):
@@ -39,8 +40,8 @@ def addEpisode(name,url,mode,iconimage,page,number_of_items,info,folder=True):
 
 
 #Function to add a regular directory
-def addDir(name,url,mode,iconimage,page,number_of_items,pasta=True):
-	u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&page="+str(page)
+def addDir(name,url,mode,iconimage,page,number_of_items,token,pasta=True):
+	u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&page="+str(page)+"&token="+urllib.quote_plus(token)
 	ok=True
 	liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
 	liz.setProperty('fanart_image', os.path.join(addonfolder,'fanart.jpg'))

@@ -26,14 +26,16 @@ datapath = xbmc.translatePath(selfAddon.getAddonInfo('profile')).decode('utf-8')
 addonfolder = xbmc.translatePath(selfAddon.getAddonInfo('path')).decode('utf-8')
 artfolder = os.path.join(addonfolder,'resources','img')
 watchedfolder = os.path.join(datapath,'watched')
-
 msgok = xbmcgui.Dialog().ok
+
+#youtube data
+channel_id = "UCtp9s4L-kxIRy221VVtgjXg"
+youtube_api_key = "AIzaSyAxaHJTQ5zgh86wk7geOwm-y0YyNMcEkSc" #If you fork this addon please register another api key (https://developers.google.com/youtube/android/player/register)
 
 def makefolders():
 	if not os.path.exists(datapath): xbmcvfs.mkdir(datapath)
 	if not os.path.exists(watchedfolder):xbmcvfs.mkdir(watchedfolder)
 	return
-
 
 def translate(text):
 	return selfAddon.getLocalizedString(text).encode('utf-8')
