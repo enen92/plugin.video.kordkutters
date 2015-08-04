@@ -69,8 +69,8 @@ def return_youtubevideos(name,url,token,page):
 	if page != 1:
 		url_api = 'https://www.googleapis.com/youtube/v3/playlistItems?part=id,snippet,contentDetails&maxResults='+str(items_per_page)+'&playlistId='+url+'&key='+youtube_api_key +'&pageToken='+token
 	else:
-		url_api = 'https://www.googleapis.com/youtube/v3/playlistItems?part=id,snippet,contentDetails&maxResults='+str(items_per_page)+'&playlistId='+url+'&key='+youtube_api_key 
-	
+		url_api = 'https://www.googleapis.com/youtube/v3/playlistItems?part=id,snippet,contentDetails&maxResults='+str(items_per_page)+'&playlistId='+url+'&key='+youtube_api_key
+
 	raw = urllib.urlopen(url_api)
 	resp = json.load(raw)
 	raw.close()
@@ -81,27 +81,43 @@ def return_youtubevideos(name,url,token,page):
 	returnedVideos = resp["items"]
 	totalvideos = len(returnedVideos)
 	totalpages = int(math.ceil((float(availablevideos)/items_per_page)))
-	for video in returnedVideos:
-		title = video["snippet"]["title"]
-		plot = video["snippet"]["description"]
-		aired = video["snippet"]["publishedAt"]
-		thumb = video["snippet"]["thumbnails"]["high"]["url"]
-		videoid = video["contentDetails"]["videoId"]
-		try: 
-			date = re.compile('(.+?)-(.+?)-(.+?)T').findall(aired)[0]
-			date = date[0]+'-'+date[1]+'-'+date[2]
-		except: date = ''
-		try:
-			if 'episode' in title.lower() or '#' in title.lower() or re.findall('KordKutters (\d+)\:',title.lower()):
-				episode = re.compile('(\d+)').findall(title)[0]
-			else: episode = ''
-		except: episode = ''
-		if os.path.exists(os.path.join(watchedfolder,str(videoid)+'.txt')) : playcount = 1
-		else: playcount = 0
+	video_ids = []
+	if returnedVideos:
+		for video in returnedVideos:
+			videoid = video["contentDetails"]["videoId"]
+			video_ids.append(videoid)
+		video_ids = ','.join(video_ids)
+		url_api = 'https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id='+video_ids+'&key='+youtube_api_key
+		#print url_api
+		raw = urllib.urlopen(url_api)
+		resp = json.load(raw)
+		raw.close()
+		returnedVideos = resp["items"]
+		for video in returnedVideos:
+			title = video["snippet"]["title"]
+			plot = video["snippet"]["description"]
+			aired = video["snippet"]["publishedAt"]
+			thumb = video["snippet"]["thumbnails"]["high"]["url"]
+			videoid = video["id"]
+			#process duration
+			duration_string = video["contentDetails"]["duration"]
+			try: duration = return_duration_as_seconds(duration_string)
+			except: duration = '0'
+			try: 
+				date = re.compile('(.+?)-(.+?)-(.+?)T').findall(aired)[0]
+				date = date[0]+'-'+date[1]+'-'+date[2]
+			except: date = ''
+			try:
+				if url == 'PL5BrgZd5yMYgty7363LhlkR8iPJ73-fCZ':
+					episode = re.compile('(\d+)').findall(title)[0]
+				else: episode = ''
+			except: episode = ''
+			if os.path.exists(os.path.join(watchedfolder,str(videoid)+'.txt')) : playcount = 1
+			else: playcount = 0
 		
-		infolabels = {'plot':plot,'aired':date,'tvshowtitle':'KordKutters','title':title,'originaltitle':title,'status':'Continuing','cast':('Nathan Betzen','Ned Scott'),'castandrole':('Nathan Betzen','Ned Scott'),'episode':episode,'playcount':playcount}
+			infolabels = {'plot':plot,'aired':date,'tvshowtitle':'KordKutters','title':title,'originaltitle':title,'status':'Continuing','cast':('Nathan Betzen','Ned Scott'),'castandrole':('Nathan Betzen','Ned Scott'),'duration':duration,'episode':episode,'playcount':playcount}
 		
-		addEpisode(title,videoid,5,thumb,page,totalvideos,infolabels,folder=False)
+			addEpisode(title,videoid,5,thumb,page,totalvideos,infolabels,folder=False)
 	
 	if totalpages > 1 and (page+1) <= totalpages:
 		addDir('[B]'+translate(30010)+'[/B] '+str(page)+'/'+str(totalpages),url,1,os.path.join(artfolder,'next.png'),page+1,1,token=nextpagetoken)
@@ -119,4 +135,16 @@ def play_youtube_video(url):
 		player._trackPosition()
 		xbmc.sleep(1000)
 	return
+	
+#receives a duration string and returns the duration in seconds (as string)
+def return_duration_as_seconds(string):
+	totalseconds = 0
+	hours = re.findall('(\d+)H',string)
+	minutes = re.findall('(\d+)M',string)
+	seconds = re.findall('(\d+)S',string)
+	if hours: totalseconds += 3600*int(hours[0])
+	if minutes: totalseconds += 60*int(minutes[0])
+	if seconds: totalseconds += int(seconds[0])
+	return str(totalseconds)
+	
 
