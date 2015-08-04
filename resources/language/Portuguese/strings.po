@@ -24,6 +24,10 @@ msgctxt "#30002"
 msgid "No live videos available right now."
 msgstr "Não existem vídeos em directo neste momento"
 
+msgctxt "#30003"
+msgid "Minimum percent to mark a video as watched"
+msgstr "Percentagem mínima para marcar um vídeo como visto"
+
 msgctxt "#30005"
 msgid "Episode Info"
 msgstr "Informação do Episódio"

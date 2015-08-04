@@ -2,5 +2,6 @@
 <settings>
    <category label="30008">
       <setting id="items_per_page" label="30011" type="slider" default="30" range="5,50" option="int" />
+      <setting id="minimum_percent" label="30003" type="slider" default="92" range="70,3,100" option="int" />
    </category>
 </settings>

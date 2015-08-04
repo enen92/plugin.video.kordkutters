@@ -20,6 +20,7 @@
 
 import xbmc
 from watched import *
+from common_variables import *
 
 class KKPlayer(xbmc.Player):
 	def __init__(self,mainurl):
@@ -38,10 +39,12 @@ class KKPlayer(xbmc.Player):
 		print("player stopped")
 		self._playbackLock = False
 		try:
-			if self.timepos/self.totalTime > 0.92:
+			played_time = float(self.timepos/self.totalTime)
+			minimum_to_mark_watched = float(selfAddon.getSetting('minimum_percent'))/100.0
+			if played_time >= minimum_to_mark_watched:
 				mark_as_watched(self.urlwatched)
-		except:pass
-		else: pass
+			else:pass
+		except: pass
 
 
 	def onPlayBackEnded(self):              
