@@ -19,13 +19,18 @@
 """
 import xbmc,xbmcgui,xbmcaddon,xbmcvfs,os
 
-#Specific youtube and youtube variables
+####### Specific youtube, youtube channel or addon configuration variables ###########
+#youtube
 channel_id = "UCtp9s4L-kxIRy221VVtgjXg"
 youtube_api_key = "AIzaSyAxaHJTQ5zgh86wk7geOwm-y0YyNMcEkSc" #If you fork this addon please register another api key (https://developers.google.com/youtube/android/player/register)
-
+#youtube channel
+cast = ['Nathan Betzen','Ned Scott']
+tvshowtitle = 'KordKutters'
+status = 'Continuing'
+#addon config
 show_live_category = True
 
-#
+######################################################################################
 
 addon_id = xbmcaddon.Addon().getAddonInfo('id')
 selfAddon = xbmcaddon.Addon(id=addon_id)
