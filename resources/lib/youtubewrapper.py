@@ -77,7 +77,7 @@ def get_live_videos():
 				aired = ''
 				date = ''
 			
-			infolabels = {'plot':plot.encode('utf-8'),'tvshowtitle':tvshowtitle,'title':title.encode('utf-8'),'originaltitle':tvshowtitle,'aired':aired,'date':date,'status':status,'cast':cast,'episode':episode,'playcount':0}
+			infolabels = {'plot':plot.encode('utf-8'),'tvshowtitle':tvshowtitle,'title':title.encode('utf-8'),'originaltitle':title.encode('utf-8'),'aired':aired,'date':date,'status':status,'cast':cast,'episode':episode,'playcount':0}
 			
 			#Video and audio info
 			video_info = { 'codec': 'avc1', 'aspect' : 1.78 }
@@ -192,7 +192,7 @@ def return_youtubevideos(name,url,token,page):
 			if os.path.exists(os.path.join(watchedfolder,str(videoid)+'.txt')) : playcount = 1
 			else: playcount = 0
 		
-			infolabels = {'plot':plot.encode('utf-8'),'aired':aired,'date':date,'tvshowtitle':tvshowtitle,'title':title.encode('utf-8'),'originaltitle':tvshowtitle,'status':status,'cast':cast,'duration':duration,'episode':episode,'playcount':playcount}
+			infolabels = {'plot':plot.encode('utf-8'),'aired':aired,'date':date,'tvshowtitle':tvshowtitle,'title':title.encode('utf-8'),'originaltitle':title.encode('utf-8'),'status':status,'cast':cast,'duration':duration,'episode':episode,'playcount':playcount}
 			
 			#Video and audio info
 			video_info = { 'codec': 'avc1', 'aspect' : 1.78 }
