@@ -7,7 +7,7 @@
     <provides>video</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
-    <language>pt</language>
+    <language>en</language>
     <platform>all</platform>
     <summary lang="en">KordKutters episodes and kodi related tutorials</summary>
     <summary lang="pt">Episódios e tutoriais do podcast Kordkutters</summary>
