@@ -85,6 +85,7 @@ print ("Token: "+str(token))
 if mode==None:
 	addDir('[B][I]'+translate(30001)+'[/B][/I]','',10,os.path.join(artfolder,'live.png'),1,1,'')
 	get_playlists()
+	xbmcplugin.setContent(int(sys.argv[1]), 'files')
 elif mode==1: return_youtubevideos(name,url,token,page)
 elif mode==5: 
 	play_youtube_video(url)
