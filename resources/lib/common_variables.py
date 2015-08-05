@@ -19,8 +19,7 @@
 """
 import xbmc,xbmcgui,xbmcaddon,xbmcvfs,os
 
-addon_id = 'plugin.video.kordkutters'
-
+addon_id = xbmcaddon.Addon().getAddonInfo('id')
 selfAddon = xbmcaddon.Addon(id=addon_id)
 datapath = xbmc.translatePath(selfAddon.getAddonInfo('profile')).decode('utf-8')
 addonfolder = xbmc.translatePath(selfAddon.getAddonInfo('path')).decode('utf-8')
@@ -29,8 +28,8 @@ watchedfolder = os.path.join(datapath,'watched')
 msgok = xbmcgui.Dialog().ok
 
 #youtube data
-channel_id = "UCtp9s4L-kxIRy221VVtgjXg"
-youtube_api_key = "AIzaSyAxaHJTQ5zgh86wk7geOwm-y0YyNMcEkSc" #If you fork this addon please register another api key (https://developers.google.com/youtube/android/player/register)
+channel_id = selfAddon.getSetting("channel_id")
+youtube_api_key = selfAddon.getSetting("youtube_api_key")
 
 def makefolders():
 	if not os.path.exists(datapath): xbmcvfs.mkdir(datapath)

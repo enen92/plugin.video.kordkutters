@@ -29,7 +29,7 @@ from directory import *
 
 #get list of playlists
 def get_playlists():
-	url = 'https://www.googleapis.com/youtube/v3/playlists?part=snippet&channelId='+channel_id+'&maxResults=50&key='+youtube_api_key
+	url = 'https://www.googleapis.com/youtube/v3/playlists?part=snippet,contentDetails&channelId='+channel_id+'&maxResults=50&key='+youtube_api_key
 	raw = urllib.urlopen(url)
 	resp = json.load(raw)
 	raw.close()
