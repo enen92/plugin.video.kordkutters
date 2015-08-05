@@ -22,8 +22,8 @@ from common_variables import *
 from iofile import *
 from kkplayer import *
 
-#Function to add an episode
-def addEpisode(name,url,mode,iconimage,page,number_of_items,info,video_info,audio_info,folder=True):
+#Function to build and return an episode item | listitem,url #TODO
+def build_episode_item(name,url,mode,iconimage,page,info,video_info,audio_info):
 	videoid = url
 	u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&page="+str(page)
 	ok=True
@@ -37,8 +37,7 @@ def addEpisode(name,url,mode,iconimage,page,number_of_items,info,video_info,audi
 	liz.addStreamInfo('video', video_info)
 	liz.addStreamInfo('audio', audio_info)
 	liz.addContextMenuItems(cm, replaceItems=False)
-	ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=folder,totalItems=number_of_items)
-	return ok
+	return (u,liz,False)
 
 
 #Function to add a regular directory
@@ -48,5 +47,6 @@ def addDir(name,url,mode,iconimage,page,number_of_items,token,pasta=True):
 	liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
 	liz.setProperty('fanart_image', os.path.join(addonfolder,'fanart.jpg'))
 	liz.setInfo( type="Video", infoLabels={ "Title": name })
+	liz.setPath(u)
 	ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=pasta,totalItems=number_of_items)
 	return ok

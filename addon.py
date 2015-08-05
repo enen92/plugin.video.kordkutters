@@ -86,7 +86,7 @@ if mode==None:
 	if show_live_category:
 		addDir('[B][I]'+translate(30001)+'[/B][/I]','',10,os.path.join(artfolder,'live.png'),1,1,'')
 	if show_uploads_playlist:
-		addDir('[B][I]'+translate(30004)+'[/B][/I]','',11,os.path.join(artfolder,'live.png'),1,1,'')
+		addDir('[B][I]'+translate(30004)+'[/B][/I]','',11,os.path.join(artfolder,'allvideos.png'),1,1,'')
 	if show_channel_playlists:
 		get_playlists()
 	xbmcplugin.setContent(int(sys.argv[1]), 'files')

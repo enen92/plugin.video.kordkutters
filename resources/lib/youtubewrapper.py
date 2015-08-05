@@ -24,6 +24,7 @@ import os
 import sys
 import math
 import xbmcaddon
+import xbmcplugin
 from common_variables import *
 from directory import *
 
@@ -43,12 +44,13 @@ def get_playlists():
 
 #get list of live videos
 def get_live_videos():
+	list_of_tupple_items = []
+	
 	url = 'https://www.googleapis.com/youtube/v3/search?eventType=live&part=snippet&channelId='+channel_id+'&type=video&maxResults=50&key='+youtube_api_key
 	raw = urllib.urlopen(url)
 	resp = json.load(raw)
 	raw.close()
 	if resp["items"]:
-		totallive = len(resp["items"])
 		video_ids = []
 		for item in resp["items"]:
 			videoid = item["id"]["videoId"]
@@ -63,9 +65,16 @@ def get_live_videos():
 			title = item["snippet"]["title"]
 			plot = item["snippet"]["description"]
 			thumb = item["snippet"]["thumbnails"]["high"]["url"]
+			aired = item["snippet"]["publishedAt"]
 			videoid = item["id"]
 			episode = re.findall('(\d+)',title)
-			infolabels = {'plot':plot.encode('utf-8'),'tvshowtitle':tvshowtitle,'title':title.encode('utf-8'),'originaltitle':tvshowtitle,'status':status,'cast':cast,'episode':episode,'playcount':0}
+						
+			try: 
+				date = re.compile('(.+?)-(.+?)-(.+?)T').findall(aired)[0]
+				date = date[0]+'-'+date[1]+'-'+date[2]
+			except: date = ''
+			
+			infolabels = {'plot':plot.encode('utf-8'),'tvshowtitle':tvshowtitle,'title':title.encode('utf-8'),'originaltitle':tvshowtitle,'aired':date,'status':status,'cast':cast,'episode':episode,'playcount':0}
 			
 			#Video and audio info
 			video_info = { 'codec': 'avc1', 'aspect' : 1.78 }
@@ -89,11 +98,16 @@ def get_live_videos():
 				video_info['width'] = 854
 				video_info['height'] = 480
 				audio_info['channels'] = 1		
-			#
 			
-			if totallive >= 1:
-				addEpisode(title.encode('utf-8'),videoid,5,thumb,1,totallive,infolabels,video_info,audio_info,folder=False)
-				xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
+			#build and append item
+			tupple = build_episode_item(title.encode('utf-8'),videoid,5,thumb,1,infolabels,video_info,audio_info)
+			list_of_tupple_items.append(tupple)
+		
+		if list_of_tupple_items:
+			number_of_items = len(list_of_tupple_items)
+			xbmcplugin.addDirectoryItems(int(sys.argv[1]), list_of_tupple_items,totalItems=number_of_items)
+				
+		xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
 	else:
 		msgok(translate(30000),translate(30002))
 		sys.exit(0)
@@ -117,6 +131,7 @@ def get_all_youtube_uploads():
 #Get list of vod videos
 def return_youtubevideos(name,url,token,page):
 	items_per_page = int(selfAddon.getSetting('items_per_page'))
+	list_of_tupple_items = []
 
 	if page != 1:
 		url_api = 'https://www.googleapis.com/youtube/v3/playlistItems?part=id,snippet,contentDetails&maxResults='+str(items_per_page)+'&playlistId='+url+'&key='+youtube_api_key +'&pageToken='+token
@@ -144,6 +159,7 @@ def return_youtubevideos(name,url,token,page):
 		resp = json.load(raw)
 		raw.close()
 		returnedVideos = resp["items"]
+		
 		for video in returnedVideos:
 			title = video["snippet"]["title"]
 			plot = video["snippet"]["description"]
@@ -190,9 +206,14 @@ def return_youtubevideos(name,url,token,page):
 				video_info['width'] = 854
 				video_info['height'] = 480
 				audio_info['channels'] = 1		
-			#
 			
-			addEpisode(title.encode('utf-8'),videoid,5,thumb,page,totalvideos,infolabels,video_info,audio_info,folder=False)
+			#build and append item
+			tupple = build_episode_item(title.encode('utf-8'),videoid,5,thumb,page,infolabels,video_info,audio_info)
+			list_of_tupple_items.append(tupple)
+
+	if list_of_tupple_items:
+		number_of_items = len(list_of_tupple_items)
+		xbmcplugin.addDirectoryItems(int(sys.argv[1]), list_of_tupple_items,totalItems=number_of_items)	
 	
 	if totalpages > 1 and (page+1) <= totalpages:
 		addDir('[B]'+translate(30010)+'[/B] '+str(page)+'/'+str(totalpages),url,1,os.path.join(artfolder,'next.png'),page+1,1,token=nextpagetoken)
