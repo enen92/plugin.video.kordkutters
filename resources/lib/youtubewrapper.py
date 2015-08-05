@@ -225,7 +225,7 @@ def return_youtubevideos(name,url,token,page):
 		number_of_items = len(list_of_tupple_items)
 		xbmcplugin.addDirectoryItems(int(sys.argv[1]), list_of_tupple_items,totalItems=number_of_items)
 	
-	add_sort_methods()
+		add_sort_methods()
 	if totalpages > 1 and (page+1) <= totalpages:
 		addDir('[B]'+translate(30010)+'[/B] '+str(page)+'/'+str(totalpages),url,1,os.path.join(artfolder,'next.png'),page+1,1,token=nextpagetoken)
 	xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
