@@ -70,11 +70,14 @@ def get_live_videos():
 			episode = re.findall('(\d+)',title)
 						
 			try: 
-				date = re.compile('(.+?)-(.+?)-(.+?)T').findall(aired)[0]
-				date = date[0]+'-'+date[1]+'-'+date[2]
-			except: date = ''
+				aired = re.compile('(.+?)-(.+?)-(.+?)T').findall(aired)[0]
+				date = aired[2] + '.' + aired[1] + '.' + aired[0]
+				aired = aired[0]+'-'+aired[1]+'-'+aired[2]
+			except: 
+				aired = ''
+				date = ''
 			
-			infolabels = {'plot':plot.encode('utf-8'),'tvshowtitle':tvshowtitle,'title':title.encode('utf-8'),'originaltitle':tvshowtitle,'aired':date,'status':status,'cast':cast,'episode':episode,'playcount':0}
+			infolabels = {'plot':plot.encode('utf-8'),'tvshowtitle':tvshowtitle,'title':title.encode('utf-8'),'originaltitle':tvshowtitle,'aired':aired,'date':date,'status':status,'cast':cast,'episode':episode,'playcount':0}
 			
 			#Video and audio info
 			video_info = { 'codec': 'avc1', 'aspect' : 1.78 }
@@ -106,6 +109,7 @@ def get_live_videos():
 		if list_of_tupple_items:
 			number_of_items = len(list_of_tupple_items)
 			xbmcplugin.addDirectoryItems(int(sys.argv[1]), list_of_tupple_items,totalItems=number_of_items)
+			add_sort_methods()
 				
 		xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
 	else:
@@ -171,18 +175,24 @@ def return_youtubevideos(name,url,token,page):
 			try: duration = return_duration_as_seconds(duration_string)
 			except: duration = '0'
 			try: 
-				date = re.compile('(.+?)-(.+?)-(.+?)T').findall(aired)[0]
-				date = date[0]+'-'+date[1]+'-'+date[2]
-			except: date = ''
+				aired = re.compile('(.+?)-(.+?)-(.+?)T').findall(aired)[0]
+				date = aired[2] + '.' + aired[1] + '.' + aired[0]
+				aired = aired[0]+'-'+aired[1]+'-'+aired[2]
+			except: 
+				aired = ''
+				date = ''
 			try:
-				if url == 'PL5BrgZd5yMYgty7363LhlkR8iPJ73-fCZ':
-					episode = re.compile('(\d+)').findall(title)[0]
+				if episode_playlists:
+					if url in episode_playlists:
+						episode = re.compile('(\d+)').findall(title)[0]
+					else: episode = ''
 				else: episode = ''
 			except: episode = ''
+			#playcount
 			if os.path.exists(os.path.join(watchedfolder,str(videoid)+'.txt')) : playcount = 1
 			else: playcount = 0
 		
-			infolabels = {'plot':plot.encode('utf-8'),'aired':date,'tvshowtitle':tvshowtitle,'title':title.encode('utf-8'),'originaltitle':tvshowtitle,'status':status,'cast':cast,'duration':duration,'episode':episode,'playcount':playcount}
+			infolabels = {'plot':plot.encode('utf-8'),'aired':aired,'date':date,'tvshowtitle':tvshowtitle,'title':title.encode('utf-8'),'originaltitle':tvshowtitle,'status':status,'cast':cast,'duration':duration,'episode':episode,'playcount':playcount}
 			
 			#Video and audio info
 			video_info = { 'codec': 'avc1', 'aspect' : 1.78 }
@@ -213,8 +223,9 @@ def return_youtubevideos(name,url,token,page):
 
 	if list_of_tupple_items:
 		number_of_items = len(list_of_tupple_items)
-		xbmcplugin.addDirectoryItems(int(sys.argv[1]), list_of_tupple_items,totalItems=number_of_items)	
+		xbmcplugin.addDirectoryItems(int(sys.argv[1]), list_of_tupple_items,totalItems=number_of_items)
 	
+	add_sort_methods()
 	if totalpages > 1 and (page+1) <= totalpages:
 		addDir('[B]'+translate(30010)+'[/B] '+str(page)+'/'+str(totalpages),url,1,os.path.join(artfolder,'next.png'),page+1,1,token=nextpagetoken)
 	xbmcplugin.setContent(int(sys.argv[1]), 'episodes')

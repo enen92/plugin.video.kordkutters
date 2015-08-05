@@ -22,7 +22,7 @@ from common_variables import *
 from iofile import *
 from kkplayer import *
 
-#Function to build and return an episode item | listitem,url #TODO
+#Function to build and return an episode item | tupple (url,listitem,isFolder)
 def build_episode_item(name,url,mode,iconimage,page,info,video_info,audio_info):
 	videoid = url
 	u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&page="+str(page)

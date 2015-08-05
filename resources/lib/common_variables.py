@@ -17,16 +17,24 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  
 """
-import xbmc,xbmcgui,xbmcaddon,xbmcvfs,os
+import xbmc
+import xbmcgui
+import xbmcaddon
+import xbmcplugin
+import xbmcvfs
+import os
+import sys
 
 ####### Specific youtube, youtube channel or addon configuration variables ###########
 #youtube
 channel_id = "UCtp9s4L-kxIRy221VVtgjXg"
 youtube_api_key = "AIzaSyAxaHJTQ5zgh86wk7geOwm-y0YyNMcEkSc" #If you fork this addon please register another api key (https://developers.google.com/youtube/android/player/register)
 #youtube channel
-cast = ['Nathan Betzen','Ned Scott']
-tvshowtitle = 'KordKutters'
-status = 'Continuing'
+cast = ['Nathan Betzen','Ned Scott'] #Team members / Cast of the channel. [] if none
+tvshowtitle = 'KordKutters' #Name of the show
+status = 'Continuing' #Status of the show
+episode_playlists = ['PL5BrgZd5yMYgty7363LhlkR8iPJ73-fCZ'] #List of playlists to consider every integer as the episode number
+
 #addon config
 show_live_category = True #hides Live directory if set to False
 show_channel_playlists = True #hides channel playlists from main menu if set to False
@@ -48,3 +56,9 @@ def makefolders():
 
 def translate(text):
 	return selfAddon.getLocalizedString(text).encode('utf-8')
+	
+def add_sort_methods():
+	sort_methods = [('default',37),('label',1),('date',3),('duration',8),('episode',22)]
+	for method,mode in sort_methods:
+		xbmcplugin.addSortMethod(int(sys.argv[1]), mode)
+	return
