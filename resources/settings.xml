@@ -3,10 +3,5 @@
    <category label="30008">
       <setting id="items_per_page" label="30011" type="slider" default="30" range="5,50" option="int" />
       <setting id="minimum_percent" label="30003" type="slider" default="92" range="70,3,100" option="int" />
-      <!-- Hidden settings -->
-      <setting id="show_live_category" type="bool" label="" default="true" visible="False"/>
-      <setting id="channel_id" type="text" label="" default="UCtp9s4L-kxIRy221VVtgjXg" visible="False"/>
-      <setting id="youtube_api_key" type="text" label="" default="AIzaSyAxaHJTQ5zgh86wk7geOwm-y0YyNMcEkSc" visible="False"/>
-      <!-- If you fork this addon please register another api key (https://developers.google.com/youtube/android/player/register) -->
    </category>
 </settings>
