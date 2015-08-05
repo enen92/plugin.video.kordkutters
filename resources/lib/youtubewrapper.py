@@ -97,8 +97,24 @@ def get_live_videos():
 	else:
 		msgok(translate(30000),translate(30002))
 		sys.exit(0)
+		
+#Get uploads playlist id and return the list of all videos videos uploaded by the channel user
+def get_all_youtube_uploads():
+	url_api = 'https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id='+channel_id+'&key='+youtube_api_key
+	raw = urllib.urlopen(url_api)
+	resp = json.load(raw)
+	raw.close()
+	if "items" in resp.keys():
+		try:
+			uploads_playlist = resp["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
+			return_youtubevideos('all',uploads_playlist,'',1)
+		except:
+			sys.exit(0)
+	else:
+		sys.exit(0)
+	return
 
-#Get list of offline videos
+#Get list of vod videos
 def return_youtubevideos(name,url,token,page):
 	items_per_page = int(selfAddon.getSetting('items_per_page'))
 

@@ -28,8 +28,8 @@ cast = ['Nathan Betzen','Ned Scott']
 tvshowtitle = 'KordKutters'
 status = 'Continuing'
 #addon config
-show_live_category = True
-
+show_live_category = True #hides Live directory if set to False
+show_channel_playlists = True #hides channel playlists from main menu if set to False
 ######################################################################################
 
 addon_id = xbmcaddon.Addon().getAddonInfo('id')
@@ -39,6 +39,7 @@ addonfolder = xbmc.translatePath(selfAddon.getAddonInfo('path')).decode('utf-8')
 artfolder = os.path.join(addonfolder,'resources','img')
 watchedfolder = os.path.join(datapath,'watched')
 msgok = xbmcgui.Dialog().ok
+show_uploads_playlist = bool(selfAddon.getSetting('show_uploads_playlist') == 'true')
 
 def makefolders():
 	if not os.path.exists(datapath): xbmcvfs.mkdir(datapath)

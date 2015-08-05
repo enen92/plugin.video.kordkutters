@@ -30,6 +30,10 @@ msgctxt "#30003"
 msgid "Minimum percent to mark a video as watched"
 ""
 
+msgctxt "#30004"
+msgid "All uploads"
+""
+
 msgctxt "#30005"
 msgid "Episode Info"
 ""
@@ -44,6 +48,10 @@ msgid "Remove watched"
 
 msgctxt "#30008"
 msgid "General"
+""
+
+msgctxt "#30009"
+msgid "Show all videos directory"
 ""
 
 msgctxt "#30010"

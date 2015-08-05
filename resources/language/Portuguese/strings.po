@@ -28,6 +28,10 @@ msgctxt "#30003"
 msgid "Minimum percent to mark a video as watched"
 msgstr "Percentagem mínima para marcar um vídeo como visto"
 
+msgctxt "#30004"
+msgid "All uploads"
+msgstr "Todos os vídeos"
+
 msgctxt "#30005"
 msgid "Episode Info"
 msgstr "Informação do Episódio"
@@ -43,6 +47,10 @@ msgstr "Remover visto"
 msgctxt "#30008"
 msgid "General"
 msgstr "Geral"
+
+msgctxt "#30009"
+msgid "Show all videos directory"
+msgstr "Mostrar directoria de todos os vídeos "
 
 msgctxt "#30010"
 msgid "Next Page"

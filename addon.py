@@ -85,7 +85,10 @@ print ("Token: "+str(token))
 if mode==None:
 	if show_live_category:
 		addDir('[B][I]'+translate(30001)+'[/B][/I]','',10,os.path.join(artfolder,'live.png'),1,1,'')
-	get_playlists()
+	if show_uploads_playlist:
+		addDir('[B][I]'+translate(30004)+'[/B][/I]','',11,os.path.join(artfolder,'live.png'),1,1,'')
+	if show_channel_playlists:
+		get_playlists()
 	xbmcplugin.setContent(int(sys.argv[1]), 'files')
 elif mode==1: return_youtubevideos(name,url,token,page)
 elif mode==5: 
@@ -95,5 +98,6 @@ elif mode==7: removed_watched(url)
 elif mode==8: add_to_bookmarks(url)
 elif mode==9: remove_from_bookmarks(url)
 elif mode==10: get_live_videos()
+elif mode==11: get_all_youtube_uploads()
 	
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
