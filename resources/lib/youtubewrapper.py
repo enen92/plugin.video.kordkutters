@@ -23,6 +23,7 @@ import re
 import os
 import sys
 import math
+import xbmcaddon
 from common_variables import *
 from directory import *
 
@@ -37,7 +38,7 @@ def get_playlists():
 		playlist_id = playlist["id"]
 		thumb = playlist["snippet"]["thumbnails"]["high"]["url"]
 		label = playlist["snippet"]["title"]
-		addDir('[B]'+label+'[/B]',playlist_id,1,thumb,1,totalplaylists,token='')
+		addDir('[B]'+label.encode('utf-8')+'[/B]',playlist_id,1,thumb,1,totalplaylists,token='')
 	return
 
 #get list of live videos
@@ -48,15 +49,50 @@ def get_live_videos():
 	raw.close()
 	if resp["items"]:
 		totallive = len(resp["items"])
+		video_ids = []
+		for item in resp["items"]:
+			videoid = item["id"]["videoId"]
+			video_ids.append(videoid)
+		video_ids = ','.join(video_ids)
+		url_api = 'https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id='+video_ids+'&key='+youtube_api_key
+		raw = urllib.urlopen(url_api)
+		resp = json.load(raw)
+		raw.close()
+		
 		for item in resp["items"]:
 			title = item["snippet"]["title"]
 			plot = item["snippet"]["description"]
 			thumb = item["snippet"]["thumbnails"]["high"]["url"]
-			videoid = item["id"]["videoId"]
+			videoid = item["id"]
 			episode = re.findall('(\d+)',title)
-			infolabels = {'plot':plot,'tvshowtitle':'KordKutters','title':title,'originaltitle':title,'status':'Continuing','cast':('Nathan Betzen','Ned Scott'),'castandrole':('Nathan Betzen','Ned Scott'),'episode':episode,'playcount':0}
+			infolabels = {'plot':plot.encode('utf-8'),'tvshowtitle':'KordKutters','title':title.encode('utf-8'),'originaltitle':title.encode('utf-8'),'status':'Continuing','cast':['Nathan Betzen','Ned Scott'],'episode':episode,'playcount':0}
+			
+			#Video and audio info
+			video_info = { 'codec': 'avc1', 'aspect' : 1.78 }
+			audio_info = { 'codec': 'aac', 'language' : 'en' }
+			try:
+				if item["contentDetails"]["definition"].lower() == 'hd':
+					video_info['width'] = 1280
+					video_info['height'] = 720
+					audio_info['channels'] = 2
+				else:
+					video_info['width'] = 854
+					video_info['height'] = 480
+					audio_info['channels'] = 1
+				try:
+					if xbmcaddon.Addon(id='plugin.video.youtube').getSetting('kodion.video.quality.ask') == 'false' and xbmcaddon.Addon(id='plugin.video.youtube').getSetting('kodion.video.quality') != '3' and xbmcaddon.Addon(id='plugin.video.youtube').getSetting('kodion.video.quality') != '4':
+						video_info['width'] = 854
+						video_info['height'] = 480
+						audio_info['channels'] = 1
+				except: pass	
+			except:
+				video_info['width'] = 854
+				video_info['height'] = 480
+				audio_info['channels'] = 1		
+			#
+			
 			if totallive >= 1:
-				addEpisode(title,videoid,5,thumb,1,totallive,infolabels,folder=False)
+				addEpisode(title.encode('utf-8'),videoid,5,thumb,1,totallive,infolabels,video_info,audio_info,folder=False)
 				xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
 	else:
 		msgok(translate(30000),translate(30002))
@@ -88,7 +124,6 @@ def return_youtubevideos(name,url,token,page):
 			video_ids.append(videoid)
 		video_ids = ','.join(video_ids)
 		url_api = 'https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id='+video_ids+'&key='+youtube_api_key
-		#print url_api
 		raw = urllib.urlopen(url_api)
 		resp = json.load(raw)
 		raw.close()
@@ -115,9 +150,33 @@ def return_youtubevideos(name,url,token,page):
 			if os.path.exists(os.path.join(watchedfolder,str(videoid)+'.txt')) : playcount = 1
 			else: playcount = 0
 		
-			infolabels = {'plot':plot,'aired':date,'tvshowtitle':'KordKutters','title':title,'originaltitle':title,'status':'Continuing','cast':('Nathan Betzen','Ned Scott'),'castandrole':('Nathan Betzen','Ned Scott'),'duration':duration,'episode':episode,'playcount':playcount}
-		
-			addEpisode(title,videoid,5,thumb,page,totalvideos,infolabels,folder=False)
+			infolabels = {'plot':plot.encode('utf-8'),'aired':date,'tvshowtitle':'KordKutters','title':title.encode('utf-8'),'originaltitle':title.encode('utf-8'),'status':'Continuing','cast':['Nathan Betzen','Ned Scott'],'duration':duration,'episode':episode,'playcount':playcount}
+			
+			#Video and audio info
+			video_info = { 'codec': 'avc1', 'aspect' : 1.78 }
+			audio_info = { 'codec': 'aac', 'language' : 'en' }
+			try:
+				if video["contentDetails"]["definition"].lower() == 'hd':
+					video_info['width'] = 1280
+					video_info['height'] = 720
+					audio_info['channels'] = 2
+				else:
+					video_info['width'] = 854
+					video_info['height'] = 480
+					audio_info['channels'] = 1
+				try:
+					if xbmcaddon.Addon(id='plugin.video.youtube').getSetting('kodion.video.quality.ask') == 'false' and xbmcaddon.Addon(id='plugin.video.youtube').getSetting('kodion.video.quality') != '3' and xbmcaddon.Addon(id='plugin.video.youtube').getSetting('kodion.video.quality') != '4':
+						video_info['width'] = 854
+						video_info['height'] = 480
+						audio_info['channels'] = 1
+				except: pass	
+			except:
+				video_info['width'] = 854
+				video_info['height'] = 480
+				audio_info['channels'] = 1		
+			#
+			
+			addEpisode(title.encode('utf-8'),videoid,5,thumb,page,totalvideos,infolabels,video_info,audio_info,folder=False)
 	
 	if totalpages > 1 and (page+1) <= totalpages:
 		addDir('[B]'+translate(30010)+'[/B] '+str(page)+'/'+str(totalpages),url,1,os.path.join(artfolder,'next.png'),page+1,1,token=nextpagetoken)

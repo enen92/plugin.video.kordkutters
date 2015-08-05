@@ -23,7 +23,7 @@ from iofile import *
 from kkplayer import *
 
 #Function to add an episode
-def addEpisode(name,url,mode,iconimage,page,number_of_items,info,folder=True):
+def addEpisode(name,url,mode,iconimage,page,number_of_items,info,video_info,audio_info,folder=True):
 	videoid = url
 	u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&page="+str(page)
 	ok=True
@@ -34,6 +34,8 @@ def addEpisode(name,url,mode,iconimage,page,number_of_items,info,folder=True):
 	else: cm.append((translate(30006), 'XBMC.RunPlugin(%s?mode=6&url=%s)' % (sys.argv[0],videoid)))
 	liz.setProperty('fanart_image', os.path.join(addonfolder,'fanart.jpg'))
 	liz.setInfo( type="Video", infoLabels=info)
+	liz.addStreamInfo('video', video_info)
+	liz.addStreamInfo('audio', audio_info)
 	liz.addContextMenuItems(cm, replaceItems=False)
 	ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=folder,totalItems=number_of_items)
 	return ok
