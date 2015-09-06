@@ -233,7 +233,7 @@ def return_youtubevideos(name,url,token,page):
 
 #Play a youtube video given the video_id	
 def play_youtube_video(url):
-	video_url = 'plugin://plugin.video.youtube?path=/root/video&action=play_video&videoid='+url
+	video_url = 'plugin://plugin.video.youtube/play/?video_id='+url
 	item = xbmcgui.ListItem(path=video_url)
 	xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, item)
 	player = KKPlayer(mainurl=url)
